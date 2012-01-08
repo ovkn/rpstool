@@ -5,7 +5,7 @@ with open('README.txt') as file:
 
 setup(name='rpstool',
       version='1.0',
-      description='Access log requests per second counter',
+      description='A simple requests per second (rps) counter',
       long_description=long_description,
       author='yagb',
       author_email='ok@yagb.ru',
