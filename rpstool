@@ -6,16 +6,18 @@ import os
 import sys
 import time
 import fcntl
+import array
 import getopt
 import select
 
 
-SEP = '\n'
+SEP = "\n"
+SECS_1M = 60
 
 
 def usage():
     """Usage message"""
-    print "USAGE: tail -f access_log | rpstool"
+    print "USAGE: tail -f access_log1 access_log2 access_logN | rpstool"
 
 
 def parse_args():
@@ -47,8 +49,10 @@ def main():
     prepare_stdin()
     buf = ""
     total_reqs = 0
+    stat_1m = array.array('I')
 
     print "Use Ctrl + C to terminate the program"
+
     # running forever until Ctrl + C is caught
     while True:
         time_left, cnt = 1.0, 0
@@ -79,8 +83,15 @@ def main():
                 idx += 1
             cnt += 1
             buf = buf[ridx + 1:]
-        print("%d rps" % cnt)
+
         total_reqs += cnt
+        # calculating avg rps as arithmetical mean of 
+        # the last 60 values collected
+        if len(stat_1m) == SECS_1M:
+            stat_1m.pop(0)   
+        stat_1m.append(cnt)
+        print("%d/%d (rps/min avg)" % (cnt, round(float(sum(stat_1m)) / 
+                                            len(stat_1m))))
 
 
 if __name__ == "__main__":
