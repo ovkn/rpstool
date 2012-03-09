@@ -15,13 +15,11 @@ SEP = '\n'
 
 def usage():
     """Usage message"""
-
     print "USAGE: tail -f access_log | rpstool"
 
 
 def parse_args():
     """Args parser"""
-
     try:
         opts = getopt.getopt(sys.argv[1:], "h", ["help"])[0]
     except getopt.GetoptError as err:
@@ -36,7 +34,6 @@ def parse_args():
 
 def prepare_stdin():
     """Makes stdin non-blocking"""
-
     try:
         fcntl.fcntl(sys.stdin, fcntl.F_SETFL, os.O_NONBLOCK)
     except IOError:
@@ -46,7 +43,6 @@ def prepare_stdin():
 
 def main():
     """Parsing args & processing stdin"""
-
     parse_args()
     prepare_stdin()
     buf = ""
